@@ -1,7 +1,11 @@
 {
   "server": {
     "baseDir": "./public",
-    "index": "index.html"
+    "index": "index.html",
+    "routes": {
+      "/": "index.html",
+      "/src": "src"
+    }
   },
   "files": ["./public/**/*.{html, htm, js, css}"],
   "port": 3000,

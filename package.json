@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build:css": "npx tailwindcss -i ./src/styles.css -o ./public/styles.css",
-    "watch:css": "npx tailwindcss -i ./src/styles.css -o public/styles.css --watch",
+    "build:css": "npx tailwindcss -i ./src/styles/styles.css -o ./public/styles.css",
+    "watch:css": "npx tailwindcss -i ./src/styles/styles.css -o public/styles.css --watch",
     "start": "concurrently \"npm run watch:css\" \"lite-server\"",
     "lint": "eslint ."
   },
