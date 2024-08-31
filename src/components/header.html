@@ -1,38 +1,37 @@
-<header class="bg-white shadow w-full">
-  <div
-    class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center"
-  >
-    <div class="flex items-center space-x-4">
-      <h1 class="text-xl font-bold text-gray-800">Hello Web UI</h1>
-      <nav class="flex space-x-4 gap-4">
-        <button data-link="roadmaps" class="text-gray-700 hover:text-blue-600">
-          Roadmaps
-        </button>
-        <button
-          data-link="roadmap-details"
-          class="text-gray-700 hover:text-blue-600"
-        >
-          Roadmap Details
-        </button>
-        <button
-          data-link="roadmap-item"
-          class="text-gray-700 hover:text-blue-600"
-        >
-          Roadmap Item
-        </button>
-      </nav>
-    </div>
-    <div class="flex items-center space-x-4">
-      <input
-        type="text"
-        placeholder="Search anything..."
-        class="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-      />
-      <button
-        class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
-      >
-        Add Project
-      </button>
-    </div>
-  </div>
-</header>
+</head>
+<body class="bg-gray-100">
+    <header class="flex items-center justify-between p-4 bg-blue-100 shadow">
+        <div class="flex items-center space-x-2">
+            <h1 class="text-2xl font-bold">To Do List</h1>
+            <p class="text-sm text-gray-600">Let's Go!</p>
+        </div>
+        <nav class="flex space-x-2">
+            <button data-link="roadmaps" class="px-4 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-700" >Roadmaps</button>
+            <button data-link="roadmap-details" class="px-4 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-700">Details</button>
+            <button data-link="roadmap-item" class="px-4 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-700">Items</button>
+        </nav>
+        <div class="flex items-center space-x-2">
+            <div class="relative">
+                <input type="text" placeholder="Search anything..." class="pl-10 pr-4 py-2 border rounded">
+                <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+                    <svg class="w-5 h-5 text-gray-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" d="M12.9 14.32a8 8 0 111.414-1.414l4.387 4.387a1 1 0 01-1.414 1.414l-4.387-4.387zM8 14a6 6 0 100-12 6 6 0 000 12z" clip-rule="evenodd"></path>
+                    </svg>
+                </span>
+            </div>
+            <button class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700">+ Add Project</button>
+        </div>
+        <div class="flex items-center space-x-2">
+            <span class="text-xl cursor-pointer">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bell-fill" viewBox="0 0 16 16">
+                    <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2m.995-14.901a1 1 0 1 0-1.99 0A5 5 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901"/>
+                </svg>
+            </span>
+            <span class="text-xl cursor-pointer">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-folder-symlink-fill" viewBox="0 0 16 16">
+                    <path d="M13.81 3H9.828a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 6.172 1H2.5a2 2 0 0 0-2 2l.04.87a2 2 0 0 0-.342 1.311l.637 7A2 2 0 0 0 2.826 14h10.348a2 2 0 0 0 1.991-1.819l.637-7A2 2 0 0 0 13.81 3M2.19 3q-.362.002-.683.12L1.5 2.98a1 1 0 0 1 1-.98h3.672a1 1 0 0 1 .707.293L7.586 3zm9.608 5.271-3.182 1.97c-.27.166-.616-.036-.616-.372V9.1s-2.571-.3-4 2.4c.571-4.8 3.143-4.8 4-4.8v-.769c0-.336.346-.538.616-.371l3.182 1.969c.27.166.27.576 0 .742"/>
+                </svg>
+            </span>
+            <img src="https://roadmapproject.org/wp-content/uploads/2018/09/Compact-Logo-Blue-Text-Full-Color.png" alt="User" class="w-8 h-8 rounded-full">
+        </div>
+    </header>
