@@ -1,18 +1,26 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>To-Do List</title>
-    <link href="./styles.css" rel="stylesheet" />
-    <link rel="icon" href="./assets/favicon.ico" />
-  </head>
-  <body
-    class="bg-gray-100 flex flex-col items-center justify-start min-h-screen"
-  >
-    <div id="header-container" class="w-full"></div>
-    <div id="app" class="w-full flex-grow mt-4"></div>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>To-Do List</title>
+        <link rel="stylesheet" href="styles.css" />
+        <link rel="icon" href="./assets/favicon.ico" />
+    </head>
+    <body class="bg-gray-100 flex flex-col md:flex-row">
+        <div
+            id="sidebar-container"
+            class="md:w-20 hover:md:w-64 fixed md:relative inset-y-0 left-0 transition-all duration-300 bg-white shadow-lg z-50"
+        ></div>
 
-    <script src="src/utils/app.js" type="module"></script>
-  </body>
+        <div id="main-container" class="flex-grow transition-all duration-300">
+            <div id="header-container" class="w-full"></div>
+            <div id="content-container" class="w-full flex-grow"></div>
+            <div id="app" class="w-full flex-grow mt-4 p-4"></div>
+        </div>
+
+        <div id="mobile-navbar-container" class="md:hidden"></div>
+
+        <script src="/bundle.js"></script>
+    </body>
 </html>

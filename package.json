@@ -1,30 +1,44 @@
 {
-  "name": "todolistada",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "build:css": "npx tailwindcss -i ./src/styles/styles.css -o ./public/styles.css",
-    "watch:css": "npx tailwindcss -i ./src/styles/styles.css -o public/styles.css --watch",
-    "start": "concurrently \"npm run watch:css\" \"lite-server\"",
-    "lint": "eslint ."
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "autoprefixer": "^10.4.20",
-    "tailwindcss": "^3.4.10",
-    "todolistada": "file:"
-  },
-  "devDependencies": {
-    "@eslint/js": "^9.9.1",
-    "concurrently": "^8.2.2",
-    "eslint": "^9.9.1",
-    "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-prettier": "^5.2.1",
-    "globals": "^15.9.0",
-    "lite-server": "^2.6.1",
-    "prettier": "^3.3.3"
-  }
+    "name": "todolistada",
+    "version": "1.0.0",
+    "description": "",
+    "main": "appp.js",
+    "scripts": {
+        "build:css": "npx tailwindcss -i ./src/styles/styles.css -o ./public/styles.css",
+        "watch:css": "npx tailwindcss -i ./src/styles/styles.css -o public/styles.css --watch",
+        "prestart": "npm install && npm run build:css && npm run format && npm run lint",
+        "start": "concurrently \"npm run watch:css\" \"webpack serve\"",
+        "build": "cross-env NODE_ENV=production npx webpack",
+        "deploy": "npm run build && gh-pages -d public",
+        "lint": "eslint \"src/**/*.js\"",
+        "format": "prettier --write \"src/**/*.js\""
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "autoprefixer": "^10.4.20",
+        "tailwindcss": "^3.4.10",
+        "todolistada": "file:"
+    },
+    "devDependencies": {
+        "@babel/core": "^7.25.2",
+        "@babel/preset-env": "^7.25.4",
+        "@eslint/js": "^9.9.1",
+        "babel-loader": "^9.1.3",
+        "concurrently": "^8.2.2",
+        "copy-webpack-plugin": "^12.0.2",
+        "cross-env": "^7.0.3",
+        "css-loader": "^7.1.2",
+        "eslint": "^9.9.1",
+        "eslint-config-prettier": "^9.1.0",
+        "eslint-plugin-prettier": "^5.2.1",
+        "gh-pages": "^6.1.1",
+        "globals": "^15.9.0",
+        "prettier": "^3.3.3",
+        "style-loader": "^4.0.0",
+        "webpack": "^5.94.0",
+        "webpack-cli": "^5.1.4",
+        "webpack-dev-server": "^5.0.4"
+    }
 }
