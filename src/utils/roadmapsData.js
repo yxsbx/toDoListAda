@@ -124,7 +124,6 @@ export function renderKanbanBoard(roadmapKey) {
         const columnElement = document.getElementById(column);
 
         if (columnElement) {
-            // Remove apenas os cards, preservando o conteúdo existente
             const existingCards =
                 columnElement.querySelectorAll('.kanban-card');
             existingCards.forEach((card) => card.remove());

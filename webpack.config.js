@@ -9,16 +9,9 @@ module.exports = {
         publicPath: '/',
     },
     devServer: {
-        static: [
-            {
-                directory: path.join(__dirname, 'public'),
-                publicPath: '/',
-            },
-            {
-                directory: path.join(__dirname, 'src/components'),
-                publicPath: '/components',
-            },
-        ],
+        static: {
+            directory: path.join(__dirname, 'public'),
+        },
         port: 8080,
         open: true,
         historyApiFallback: true,
@@ -46,7 +39,12 @@ module.exports = {
     },
     plugins: [
         new CopyWebpackPlugin({
-            patterns: [{ from: 'src/components', to: 'components' }],
+            patterns: [
+                {
+                    from: path.resolve(__dirname, 'src/components'),
+                    to: path.resolve(__dirname, 'public/components'),
+                },
+            ],
         }),
     ],
     mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
