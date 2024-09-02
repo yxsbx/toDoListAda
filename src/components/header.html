@@ -1,14 +1,14 @@
-<header class="flex items-center justify-between p-4 bg-slate-200 shadow">
+<header class="flex flex-wrap items-center justify-between p-4 bg-slate-200 shadow">
     <div class="flex-col ml-8">
-        <h1 class="text-2xl font-bold">Olá, Enzo Gabriel</h1>
-        <h2 class="text-md">Seja bem-vindo!</h2>
+        <h1 class="text-2xl font-bold sm:text-xl">Olá, Enzo Gabriel</h1>
+        <h2 class="text-md sm:text-sm">Seja bem-vindo!</h2>
     </div>
-    <div class="flex items-center space-x-4 gap-4">
+    <div class="flex items-center space-x-4 gap-4 mt-4 sm:mt-2">
         <div class="relative mr-4">
             <input
                 type="text"
                 placeholder="Search anything..."
-                class="pr-10 pl-4 py-2 border rounded"
+                class="pr-10 pl-4 py-2 border rounded w-full sm:w-48"
             />
             <span class="absolute inset-y-0 right-0 flex items-center pr-3">
                 <svg
@@ -32,25 +32,6 @@
             + Novo Roadmap
         </button>
         <div class="flex items-center gap-3">
-            <span
-                class="text-xl cursor-pointer rounded-full bg-white p-2 hover:bg-blue-100 transition-colors duration-300"
-            >
-                <svg
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                >
-                    <path
-                        d="M3 19V6C3 5.44772 3.44772 5 4 5H8.03163C8.3284 5 8.60985 5.13182 8.79985 5.35982L10.7002 7.64018C10.8901 7.86818 11.1716 8 11.4684 8H16C16.5523 8 17 8.44772 17 9V10M3 19L6 11H21L18 19H3Z"
-                        stroke="#383838"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                    />
-                </svg>
-            </span>
             <span
                 class="text-xl cursor-pointer rounded-full bg-white p-2 hover:bg-blue-100 transition-colors duration-300"
             >
@@ -86,6 +67,26 @@
                         clip-rule="evenodd"
                         d="M12 20C10.107 20 8.36763 19.3425 6.99768 18.2435C6.99845 18.2441 6.99923 18.2448 7 18.2454V17.5625C7 15.7676 8.49238 14.3125 10.3333 14.3125H13.6667C15.5076 14.3125 17 15.7676 17 17.5625V18.2454C15.6304 19.3433 13.8919 20 12 20ZM2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5003 17.5593 21.9635 12.0675 21.9998C12.045 21.9999 12.0225 22 12 22C11.9763 22 11.9527 21.9999 11.9291 21.9998C6.43889 21.9616 2 17.4992 2 12ZM12 7C10.1591 7 8.66667 8.45507 8.66667 10.25C8.66667 12.0449 10.1591 13.5 12 13.5C13.8409 13.5 15.3333 12.0449 15.3333 10.25C15.3333 8.45507 13.8409 7 12 7Z"
                         fill="#383838"
+                    />
+                </svg>
+            </span>
+
+            <span
+                class="text-xl cursor-pointer rounded-full bg-white p-2 hover:bg-blue-100 transition-colors duration-300"
+            >
+                <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+                    <path
+                        d="M3 19V6C3 5.44772 3.44772 5 4 5H8.03163C8.3284 5 8.60985 5.13182 8.79985 5.35982L10.7002 7.64018C10.8901 7.86818 11.1716 8 11.4684 8H16C16.5523 8 17 8.44772 17 9V10M3 19L6 11H21L18 19H3Z"
+                        stroke="#383838"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
                     />
                 </svg>
             </span>
