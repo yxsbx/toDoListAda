@@ -1,17 +1,21 @@
-import { renderKanbanBoard } from './roadmapsData.js';
+import { initializeKanbanBoard } from './kanbanManager.js';
 
-export function initializeKanbanBoard() {
-    renderKanbanBoard('logicProgramming');
+document.addEventListener('DOMContentLoaded', () => {
+    const checkExist = setInterval(() => {
+        const blocked = document.getElementById('blocked');
+        const todo = document.getElementById('TODO');
+        const progress = document.getElementById('progress');
+        const completed = document.getElementById('completed');
 
-    document
-        .getElementById('logicProgrammingBtn')
-        .addEventListener('click', () => {
-            renderKanbanBoard('logicProgramming');
-        });
-
-    document
-        .getElementById('objectOrientedProgrammingBtn')
-        .addEventListener('click', () => {
-            renderKanbanBoard('objectOrientedProgramming');
-        });
-}
+        if (
+            blocked &&
+            todo &&
+            progress &&
+            completed &&
+            window.location.pathname.includes('roadmap-details')
+        ) {
+            clearInterval(checkExist);
+            initializeKanbanBoard();
+        }
+    }, 100);
+});

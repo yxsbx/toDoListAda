@@ -1,17 +1,21 @@
-import { initializeLinkListeners } from './router.js'; // Importando de router.js
+import { navigateTo } from './router';
 
 let headerFetchController = null;
 let sidebarFetchController = null;
 let mobileNavbarFetchController = null;
 
 function abortFetch(controller) {
-    if (controller) {
-        console.log('Aborting previous fetch');
+    if (controller && typeof controller.abort === 'function') {
         controller.abort();
     }
 }
 
-export function fetchWithAbort(url, onSuccess, onError, controllerSetter) {
+export function fetchWithAbort(
+    url,
+    onSuccess,
+    onError,
+    controllerSetter = () => {}
+) {
     const controller = new AbortController();
     controllerSetter(controller);
     const signal = controller.signal;
@@ -33,58 +37,47 @@ export function fetchWithAbort(url, onSuccess, onError, controllerSetter) {
 }
 
 export function loadHeader() {
-    loadLayoutComponent('header', 'header-container');
+    loadLayoutComponent('header', 'header-container', (controller) => {
+        abortFetch(headerFetchController);
+        headerFetchController = controller;
+    });
 }
 
 export function loadSidebar() {
-    loadLayoutComponent(
-        'sidebar',
-        'sidebar-container',
-        initializeSidebarListeners
-    );
+    loadLayoutComponent('sidebar', 'sidebar-container', (controller) => {
+        abortFetch(sidebarFetchController);
+        sidebarFetchController = controller;
+    });
 }
 
 export function loadMobileNavbar() {
     loadLayoutComponent(
         'mobile-navbar',
         'mobile-navbar-container',
-        initializeLinkListeners
+        (controller) => {
+            abortFetch(mobileNavbarFetchController);
+            mobileNavbarFetchController = controller;
+        }
     );
 }
 
-function loadLayoutComponent(componentName, containerId, callback) {
+function loadLayoutComponent(componentName, containerId, controllerSetter) {
     const container = document.getElementById(containerId);
     if (!container) {
         console.error(`Elemento com ID '${containerId}' não encontrado.`);
         return;
     }
 
-    let controllerSetter;
-
-    if (componentName === 'header') {
-        controllerSetter = (controller) => {
-            abortFetch(headerFetchController);
-            headerFetchController = controller;
-        };
-    } else if (componentName === 'sidebar') {
-        controllerSetter = (controller) => {
-            abortFetch(sidebarFetchController);
-            sidebarFetchController = controller;
-        };
-    } else if (componentName === 'mobile-navbar') {
-        controllerSetter = (controller) => {
-            abortFetch(mobileNavbarFetchController);
-            mobileNavbarFetchController = controller;
-        };
-    } else {
-        controllerSetter = () => {};
-    }
+    abortFetch(controllerSetter ? controllerSetter() : null);
 
     fetchWithAbort(
         `/components/${componentName}.html`,
         (html) => {
             container.innerHTML = html;
-            if (callback) callback();
+
+            if (componentName === 'sidebar') {
+                initializeSidebarListeners();
+            }
         },
         () => {
             container.innerHTML = `<p>Error loading ${componentName}. Please try again.</p>`;
@@ -93,13 +86,16 @@ function loadLayoutComponent(componentName, containerId, callback) {
     );
 }
 
-export function initializeSidebarListeners() {
-    const sidebar = document.getElementById('sidebar-container');
-    const mainContainer = document.getElementById('main-container');
-
-    if (sidebar && mainContainer) {
-        initializeLinkListeners();
-    } else {
-        console.error('Sidebar ou mainContainer não encontrado!');
-    }
+function initializeSidebarListeners() {
+    document.querySelectorAll('[data-link]').forEach((link) => {
+        link.addEventListener('click', (event) => {
+            event.preventDefault();
+            const url = event.currentTarget.getAttribute('data-link');
+            if (url) {
+                navigateTo(url);
+            } else {
+                console.error("O link não contém a propriedade 'data-link'.");
+            }
+        });
+    });
 }

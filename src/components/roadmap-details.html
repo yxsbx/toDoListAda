@@ -105,55 +105,44 @@
     </div>
 </div>
 
-<div class="flex flex-col sm:flex-row justify-center gap-4 mb-6 font-bold">
-    <button
-        id="logicProgrammingBtn"
-        class="bg-blue-500 text-white py-2 px-4 rounded-lg transition-colors duration-300 hover:bg-blue-700 hover:shadow-lg shadow"
-    >
-        Lógica de Programação
-    </button>
-    <button
-        id="objectOrientedProgrammingBtn"
-        class="bg-green-500 text-white py-2 px-4 rounded-lg transition-colors duration-300 hover:bg-green-700 hover:shadow-lg shadow"
-    >
-        Programação Orientada a Objetos?
-    </button>
-</div>
-
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 ml-8">
-    <div id="TODO" class="bg-white shadow p-4 rounded-md">
+    <div id="blocked" class="kanban-column bg-white shadow p-4 rounded-md">
+        <h2 class="font-bold text-lg mb-4 text-center">Blocked</h2>
+        <button
+            class="bg-blue-100 rounded-md text-blue-700 py-2 px-4 w-full mb-4"
+        >
+            + Nova Tarefa
+        </button>
+        <div class="task-list"></div>
+    </div>
+
+    <div id="TODO" class="kanban-column bg-white shadow p-4 rounded-md">
         <h2 class="font-bold text-lg mb-4 text-center">To Do</h2>
         <button
             class="bg-blue-100 rounded-md text-blue-700 py-2 px-4 w-full mb-4"
         >
             + Nova Tarefa
         </button>
+        <div class="task-list"></div>
     </div>
 
-    <div id="progress" class="bg-white shadow p-4 rounded-md">
+    <div id="progress" class="kanban-column bg-white shadow p-4 rounded-md">
         <h2 class="font-bold text-lg mb-4 text-center">In Progress</h2>
         <button
             class="bg-blue-100 rounded-md text-blue-700 py-2 px-4 w-full mb-4"
         >
             + Nova Tarefa
         </button>
+        <div class="task-list"></div>
     </div>
 
-    <div id="completed" class="bg-white shadow p-4 rounded-md">
+    <div id="completed" class="kanban-column bg-white shadow p-4 rounded-md">
         <h2 class="font-bold text-lg mb-4 text-center">Completed</h2>
         <button
             class="bg-blue-100 rounded-md text-blue-700 py-2 px-4 w-full mb-4"
         >
             + Nova Tarefa
         </button>
-    </div>
-
-    <div id="active" class="bg-white shadow p-4 rounded-md">
-        <h2 class="font-bold text-lg mb-4 text-center">Active</h2>
-        <button
-            class="bg-blue-100 rounded-md text-blue-700 py-2 px-4 w-full mb-4"
-        >
-            + Nova Tarefa
-        </button>
+        <div class="task-list"></div>
     </div>
 </div>

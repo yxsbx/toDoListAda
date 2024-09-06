@@ -1,19 +1,9 @@
 import { fetchWithAbort } from './layout.js';
-import { initializeKanbanBoard } from './kanbanBoard.js';
-
-let navigateTimeout = null;
+import { initializeKanbanBoard } from './kanbanManager.js';
 
 export function navigateTo(url) {
-    if (navigateTimeout) {
-        clearTimeout(navigateTimeout);
-    }
-
-    navigateTimeout = setTimeout(() => {
-        history.pushState(null, null, url);
-        setTimeout(() => {
-            router();
-        }, 100);
-    }, 300);
+    history.pushState(null, null, url);
+    router();
 }
 
 export function initializeLinkListeners() {
@@ -32,7 +22,7 @@ export function initializeLinkListeners() {
     });
 }
 
-function loadComponent(componentName) {
+export function loadComponent(componentName, callback) {
     const app = document.getElementById('app');
     if (!app) {
         console.error(`Elemento com ID 'app' não encontrado.`);
@@ -43,50 +33,65 @@ function loadComponent(componentName) {
         `/components/${componentName}.html`,
         (html) => {
             app.innerHTML = html;
-            initializeLinkListeners();
-
-            if (componentName === 'roadmap-details') {
-                initializeKanbanBoard();
-            }
+            if (callback) callback();
         },
         () => {
             app.innerHTML = `<p>Error loading component. Please try again.</p>`;
-        },
-        () => {}
+        }
     );
 }
 
 export function router() {
     const routes = [
         { path: '/', view: () => loadComponent('about-roadmap') },
-        { path: '/roadmaps', view: () => loadComponent('roadmaps') },
+        {
+            path: '/roadmaps',
+            view: () => loadComponent('roadmaps', initializeRoadmapSelection),
+        },
         {
             path: '/roadmap-details',
-            view: () => loadComponent('roadmap-details'),
+            view: () => loadComponent('roadmap-details', initializeKanbanBoard),
         },
         { path: '/about-roadmap', view: () => loadComponent('about-roadmap') },
+        { path: '/404', view: () => loadComponent('404') },
     ];
 
-    const potentialMatches = routes.map((route) => ({
-        route: route,
-        isMatch: location.pathname === route.path,
-    }));
-
-    let match = potentialMatches.find(
-        (potentialMatch) => potentialMatch.isMatch
+    const potentialMatch = routes.find(
+        (route) => route.path === location.pathname
     );
 
-    if (!match) {
-        match = {
-            route: routes[0],
-            isMatch: true,
-        };
+    if (!potentialMatch) {
+        loadComponent('404');
+    } else {
+        potentialMatch.view();
     }
-
-    match.route.view();
 }
 
 window.addEventListener('popstate', router);
 document.addEventListener('DOMContentLoaded', () => {
     router();
 });
+
+export function initializeRoadmapSelection() {
+    const roadmapButtons = [
+        { id: 'logicProgrammingBtn', key: 'logicProgramming' },
+        {
+            id: 'objectOrientedProgrammingBtn',
+            key: 'objectOrientedProgramming',
+        },
+        { id: 'webDevelopmentBtn', key: 'webDevelopment' },
+        { id: 'dataStructuresBtn', key: 'dataStructures' },
+        { id: 'algorithmsBtn', key: 'algorithms' },
+        { id: 'pythonBtn', key: 'python' },
+    ];
+
+    roadmapButtons.forEach((btn) => {
+        const buttonElement = document.getElementById(btn.id);
+        if (buttonElement) {
+            buttonElement.addEventListener('click', () => {
+                const newUrl = `/roadmap-details?roadmap=${btn.key}`;
+                navigateTo(newUrl);
+            });
+        }
+    });
+}
