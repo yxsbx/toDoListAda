@@ -21,7 +21,7 @@ export function renderKanbanBoard(roadmapKey) {
                 taskElement.className =
                     'kanban-card bg-slate-100 rounded-md p-4 mb-4';
                 taskElement.draggable = true;
-                taskElement.dataset.index = index;
+                taskElement.dataset.taskId = task.title;
                 taskElement.dataset.column = column;
 
                 taskElement.innerHTML = `
