@@ -23,7 +23,7 @@ export function renderKanbanBoard(roadmapKey) {
             roadmap[column].forEach((task, index) => {
                 const taskElement = document.createElement('div');
                 taskElement.className =
-                    'kanban-card bg-slate-100 rounded-md p-4 mb-4';
+                    'kanban-card bg-white rounded-md p-4 mb-4 border-solid border border-700';
                 taskElement.draggable = true;
                 taskElement.dataset.taskId = task.title;
                 taskElement.dataset.column = column;
@@ -31,10 +31,6 @@ export function renderKanbanBoard(roadmapKey) {
                 taskElement.innerHTML = `
                     <h3 class="font-bold mb-2">${task.title}</h3>
                     <p class="text-black text-sm mb-4">${task.description}</p>
-                    <div class="flex justify-between items-center text-black text-sm mb-2">
-                        <span class="${task.labelColor} text-black font-bold rounded-lg p-2">${task.label}</span>
-                        <span>${task.deadline}</span>
-                    </div>
                     <div class="flex justify-between">
                         <button class="edit-task text-blue-500 underline">Editar</button>
                         <button class="delete-task text-red-500 underline">Excluir</button>
@@ -67,27 +63,10 @@ export function renderKanbanBoard(roadmapKey) {
                             'Editar descrição da tarefa:',
                             task.description
                         );
-                        const newLabel = prompt(
-                            'Editar label da tarefa:',
-                            task.label
-                        );
-                        const newLabelColor = prompt(
-                            'Editar cor do label da tarefa (ex: bg-blue-200):',
-                            task.labelColor
-                        );
-                        const newDeadline = prompt(
-                            'Editar prazo da tarefa:',
-                            task.deadline
-                        );
 
                         if (newTitle && newTitle.trim()) task.title = newTitle;
                         if (newDescription && newDescription.trim())
                             task.description = newDescription;
-                        if (newLabel && newLabel.trim()) task.label = newLabel;
-                        if (newLabelColor && newLabelColor.trim())
-                            task.labelColor = newLabelColor;
-                        if (newDeadline && newDeadline.trim())
-                            task.deadline = newDeadline;
 
                         const updatedRoadmapsFromStorage = {
                             ...roadmapsFromStorage,
@@ -103,4 +82,50 @@ export function renderKanbanBoard(roadmapKey) {
             });
         }
     });
+
+    const createTaskButton = document.getElementById('createTaskButton');
+    const newTaskTitleInput = document.getElementById('newTaskTitle');
+    const newTaskDescriptionInput =
+        document.getElementById('newTaskDescription');
+    const newTaskColumnSelect = document.getElementById('newTaskColumn');
+    const newTaskModal = document.getElementById('newTaskModal');
+
+    if (
+        createTaskButton &&
+        newTaskTitleInput &&
+        newTaskDescriptionInput &&
+        newTaskColumnSelect &&
+        newTaskModal
+    ) {
+        createTaskButton.addEventListener('click', () => {
+            const newTaskTitle = newTaskTitleInput.value.trim();
+            const newTaskDescription = newTaskDescriptionInput.value.trim();
+            const selectedColumn = newTaskColumnSelect.value;
+
+            if (!newTaskTitle || !selectedColumn) {
+                alert('Título e coluna são obrigatórios.');
+                return;
+            }
+
+            const newTask = {
+                title: newTaskTitle,
+                description: newTaskDescription,
+            };
+            roadmap[selectedColumn].push(newTask);
+
+            const updatedRoadmapsFromStorage = {
+                ...roadmapsFromStorage,
+                [roadmapKey]: roadmap,
+            };
+            layoutManager.saveRoadmapsToLocalStorage(
+                updatedRoadmapsFromStorage
+            );
+
+            newTaskTitleInput.value = '';
+            newTaskDescriptionInput.value = '';
+            newTaskModal.classList.add('hidden');
+
+            renderKanbanBoard(roadmapKey);
+        });
+    }
 }

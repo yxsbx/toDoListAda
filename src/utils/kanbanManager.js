@@ -18,7 +18,6 @@ class KanbanBoardManager {
         );
 
         if (columnsExist) {
-            clearInterval(checkExistInterval);
             this.initializeKanbanBoard();
         }
     };

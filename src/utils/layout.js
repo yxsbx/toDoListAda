@@ -143,9 +143,6 @@ class LayoutManager {
         );
 
         if (!searchInput || !roadmapContainer) {
-            console.error(
-                'Input de busca ou container dos roadmaps não encontrados.'
-            );
             return;
         }
 
@@ -181,7 +178,6 @@ class LayoutManager {
             '.roadmap-buttons-container'
         );
         if (!roadmapContainer) {
-            console.error('Container dos botões de roadmap não encontrado.');
             return;
         }
 
@@ -244,7 +240,6 @@ class LayoutManager {
         );
 
         if (!roadmapContainer) {
-            console.error('Container dos botões de roadmap não encontrado.');
             return;
         }
 
@@ -256,6 +251,8 @@ class LayoutManager {
                 roadmapKey,
                 false
             );
+
+            renderKanbanBoard(roadmapKey);
         });
     }
 

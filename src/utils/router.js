@@ -1,6 +1,7 @@
 import { layoutManager } from './layout';
 import { kanbanBoardManager } from './kanbanManager';
 import { defaultRoadmaps } from './data/roadmapsData';
+import { renderKanbanBoard } from './kanbanRenderer';
 
 class Router {
     constructor(routes) {
@@ -144,10 +145,17 @@ export const router = new Router([
     {
         path: '/roadmap-details',
         view: () =>
-            router.loadComponent(
-                'roadmap-details',
-                kanbanBoardManager.initializeKanbanBoard
-            ),
+            router.loadComponent('roadmap-details', () => {
+                const urlParams = new URLSearchParams(window.location.search);
+                let roadmapKey = urlParams.get('roadmap');
+                if (!roadmapKey) {
+                    roadmapKey = 'logicProgramming';
+                    const newUrl = `${window.location.origin}/roadmap-details?roadmap=${roadmapKey}`;
+                    window.history.replaceState({ path: newUrl }, '', newUrl);
+                }
+
+                renderKanbanBoard(roadmapKey);
+            }),
     },
     {
         path: '/about-roadmap',
