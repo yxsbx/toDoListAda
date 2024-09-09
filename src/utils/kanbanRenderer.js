@@ -45,7 +45,14 @@ export function renderKanbanBoard(roadmapKey) {
                     .querySelector('.delete-task')
                     .addEventListener('click', () => {
                         roadmap[column].splice(index, 1);
-                        layoutManager.saveRoadmapsToLocalStorage(roadmaps);
+
+                        const updatedRoadmapsFromStorage = {
+                            ...roadmapsFromStorage,
+                            [roadmapKey]: roadmap,
+                        };
+                        layoutManager.saveRoadmapsToLocalStorage(
+                            updatedRoadmapsFromStorage
+                        );
                         renderKanbanBoard(roadmapKey);
                     });
 
@@ -73,13 +80,22 @@ export function renderKanbanBoard(roadmapKey) {
                             task.deadline
                         );
 
-                        if (newTitle) task.title = newTitle;
-                        if (newDescription) task.description = newDescription;
-                        if (newLabel) task.label = newLabel;
-                        if (newLabelColor) task.labelColor = newLabelColor;
-                        if (newDeadline) task.deadline = newDeadline;
+                        if (newTitle && newTitle.trim()) task.title = newTitle;
+                        if (newDescription && newDescription.trim())
+                            task.description = newDescription;
+                        if (newLabel && newLabel.trim()) task.label = newLabel;
+                        if (newLabelColor && newLabelColor.trim())
+                            task.labelColor = newLabelColor;
+                        if (newDeadline && newDeadline.trim())
+                            task.deadline = newDeadline;
 
-                        layoutManager.saveRoadmapsToLocalStorage(roadmaps);
+                        const updatedRoadmapsFromStorage = {
+                            ...roadmapsFromStorage,
+                            [roadmapKey]: roadmap,
+                        };
+                        layoutManager.saveRoadmapsToLocalStorage(
+                            updatedRoadmapsFromStorage
+                        );
                         renderKanbanBoard(roadmapKey);
                     });
 
