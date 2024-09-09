@@ -30,7 +30,7 @@ class KanbanInitializer {
             } else if (this.currentAttempts >= this.maxAttempts) {
                 clearInterval(this.checkExistInterval);
                 console.error(
-                    'Erro: Não foi possível encontrar os elementos do Kanban no tempo permitido.'
+                    'Erro: Não foi possível encontrar os elementos do Kanban.'
                 );
             }
         }, this.checkInterval);

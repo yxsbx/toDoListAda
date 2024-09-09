@@ -1,20 +1,9 @@
 import Sortable from 'sortablejs';
 import { renderKanbanBoard } from './kanbanRenderer';
+import { layoutManager } from './layout';
 
 class KanbanBoardManager {
     constructor() {
-        this.kanbanButtons = [
-            { id: 'logicProgrammingBtn', key: 'logicProgramming' },
-            {
-                id: 'objectOrientedProgrammingBtn',
-                key: 'objectOrientedProgramming',
-            },
-            { id: 'webDevelopmentBtn', key: 'webDevelopment' },
-            { id: 'dataStructuresBtn', key: 'dataStructures' },
-            { id: 'algorithmsBtn', key: 'algorithms' },
-            { id: 'pythonBtn', key: 'python' },
-        ];
-
         this.columns = ['blocked', 'TODO', 'progress', 'completed'];
         this.currentRoadmap = null;
 
@@ -24,24 +13,18 @@ class KanbanBoardManager {
     }
 
     checkKanbanElementsExist = () => {
-        const checkExistInterval = setInterval(() => {
-            const columnsExist = this.columns.every((columnId) =>
-                document.getElementById(columnId)
-            );
+        const columnsExist = this.columns.every((columnId) =>
+            document.getElementById(columnId)
+        );
 
-            if (columnsExist) {
-                clearInterval(checkExistInterval);
-                this.initializeKanbanBoard();
-            } else {
-                console.warn(
-                    'As colunas do Kanban ainda não estão disponíveis no DOM.'
-                );
-            }
-        }, 100);
+        if (columnsExist) {
+            clearInterval(checkExistInterval);
+            this.initializeKanbanBoard();
+        }
     };
 
-    updateKanbanBoard = (roadmap) => {
-        this.currentRoadmap = roadmap || this.getSelectedRoadmap();
+    updateKanbanBoard = (roadmapKey) => {
+        this.currentRoadmap = roadmapKey || this.getSelectedRoadmap();
         renderKanbanBoard(this.currentRoadmap);
         this.enableDragAndDrop();
     };
@@ -54,11 +37,13 @@ class KanbanBoardManager {
     initializeKanbanBoard = () => {
         this.updateKanbanBoard();
 
-        this.kanbanButtons.forEach((btn) => {
-            const buttonElement = document.getElementById(btn.id);
+        const roadmaps = layoutManager.loadRoadmapsFromLocalStorage();
+
+        Object.keys(roadmaps).forEach((roadmapKey) => {
+            const buttonElement = document.getElementById(`${roadmapKey}Btn`);
             if (buttonElement) {
                 buttonElement.addEventListener('click', () => {
-                    this.handleRoadmapChange(btn.key);
+                    this.handleRoadmapChange(roadmapKey);
                 });
             }
         });

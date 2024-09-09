@@ -1,7 +1,11 @@
-import { roadmaps } from './data/roadmapsData';
+import { layoutManager } from './layout';
+import { defaultRoadmaps } from './data/roadmapsData';
 
 export function renderKanbanBoard(roadmapKey) {
-    const roadmap = roadmaps[roadmapKey];
+    const roadmapsFromStorage = layoutManager.loadRoadmapsFromLocalStorage();
+    const allRoadmaps = { ...defaultRoadmaps, ...roadmapsFromStorage };
+
+    const roadmap = allRoadmaps[roadmapKey];
 
     if (!roadmap) {
         console.error(`Nenhum roadmap encontrado com a chave: ${roadmapKey}`);
@@ -41,6 +45,7 @@ export function renderKanbanBoard(roadmapKey) {
                     .querySelector('.delete-task')
                     .addEventListener('click', () => {
                         roadmap[column].splice(index, 1);
+                        layoutManager.saveRoadmapsToLocalStorage(roadmaps);
                         renderKanbanBoard(roadmapKey);
                     });
 
@@ -74,6 +79,7 @@ export function renderKanbanBoard(roadmapKey) {
                         if (newLabelColor) task.labelColor = newLabelColor;
                         if (newDeadline) task.deadline = newDeadline;
 
+                        layoutManager.saveRoadmapsToLocalStorage(roadmaps);
                         renderKanbanBoard(roadmapKey);
                     });
 
