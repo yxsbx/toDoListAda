@@ -22,8 +22,8 @@ class KanbanBoardManager {
         }
     };
 
-    updateKanbanBoard = (roadmapKey) => {
-        this.currentRoadmap = roadmapKey || this.getSelectedRoadmap();
+    updateKanbanBoard = (roadmap) => {
+        this.currentRoadmap = roadmap || this.getSelectedRoadmap();
         renderKanbanBoard(this.currentRoadmap);
         this.enableDragAndDrop();
     };
@@ -68,15 +68,22 @@ class KanbanBoardManager {
                 }
 
                 Sortable.create(columnEl, {
-                    group: 'shared',
+                    group: {
+                        name: 'shared',
+                        pull: true,
+                        put: true,
+                    },
                     animation: 200,
                     delay: 0,
                     ghostClass: 'sortable-ghost',
-                    sort: false,
-                    fallbackTolerance: 0,
+                    sort: true,
                     onEnd: (evt) => {
                         this.adjustColumnHeight(evt.from);
                         this.adjustColumnHeight(evt.to);
+
+                        console.log(
+                            `Moved item from ${evt.from.id} to ${evt.to.id}`
+                        );
                     },
                 });
             }

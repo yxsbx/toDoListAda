@@ -105,12 +105,9 @@
 
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 ml-8">
     <div>
-        <div id="blocked">
+        <div id="blocked" class="kanban-column">
             <h2 class="kanban-title text-red-700">Blocked</h2>
-            <a
-                id="btn-new-task-blocked"
-                class="btn btn-outlined"
-                data-column="blocked"
+            <a class="btn btn-outlined create-task" data-column="blocked"
                 >+ Nova Tarefa</a
             >
             <div class="task-list"></div>
@@ -118,12 +115,9 @@
     </div>
 
     <div>
-        <div id="TODO">
+        <div id="TODO" class="kanban-column">
             <h2 class="kanban-title text-yellow-500">To Do</h2>
-            <a
-                id="btn-new-task-todo"
-                class="btn btn-outlined"
-                data-column="TODO"
+            <a class="btn btn-outlined create-task" data-column="TODO"
                 >+ Nova Tarefa</a
             >
             <div class="task-list"></div>
@@ -131,12 +125,9 @@
     </div>
 
     <div>
-        <div id="progress">
+        <div id="progress" class="kanban-column">
             <h2 class="kanban-title text-purple-800">In Progress</h2>
-            <a
-                id="btn-new-task-progress"
-                class="btn btn-outlined"
-                data-column="progress"
+            <a class="btn btn-outlined create-task" data-column="progress"
                 >+ Nova Tarefa</a
             >
             <div class="task-list"></div>
@@ -144,12 +135,9 @@
     </div>
 
     <div>
-        <div id="completed">
+        <div id="completed" class="kanban-column">
             <h2 class="kanban-title text-green-700">Completed</h2>
-            <a
-                id="btn-new-task-completed"
-                class="btn btn-outlined"
-                data-column="completed"
+            <a class="btn btn-outlined create-task" data-column="completed"
                 >+ Nova Tarefa</a
             >
             <div class="task-list"></div>

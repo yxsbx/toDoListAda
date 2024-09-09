@@ -1,5 +1,6 @@
 import { layoutManager } from './layout';
 import { defaultRoadmaps } from './data/roadmapsData';
+import { kanbanBoardManager } from './kanbanManager';
 
 export function renderKanbanBoard(roadmapKey) {
     const roadmapsFromStorage = layoutManager.loadRoadmapsFromLocalStorage();
@@ -26,6 +27,7 @@ export function renderKanbanBoard(roadmapKey) {
                     'kanban-card bg-white rounded-md p-4 mb-4 border-solid border border-700';
                 taskElement.draggable = true;
                 taskElement.dataset.taskId = task.title;
+                taskElement.dataset.index = index;
                 taskElement.dataset.column = column;
 
                 taskElement.innerHTML = `
@@ -83,49 +85,72 @@ export function renderKanbanBoard(roadmapKey) {
         }
     });
 
-    const createTaskButton = document.getElementById('createTaskButton');
-    const newTaskTitleInput = document.getElementById('newTaskTitle');
-    const newTaskDescriptionInput =
-        document.getElementById('newTaskDescription');
-    const newTaskColumnSelect = document.getElementById('newTaskColumn');
-    const newTaskModal = document.getElementById('newTaskModal');
-
-    if (
-        createTaskButton &&
-        newTaskTitleInput &&
-        newTaskDescriptionInput &&
-        newTaskColumnSelect &&
-        newTaskModal
-    ) {
-        createTaskButton.addEventListener('click', () => {
-            const newTaskTitle = newTaskTitleInput.value.trim();
-            const newTaskDescription = newTaskDescriptionInput.value.trim();
-            const selectedColumn = newTaskColumnSelect.value;
-
-            if (!newTaskTitle || !selectedColumn) {
-                alert('Título e coluna são obrigatórios.');
-                return;
-            }
-
-            const newTask = {
-                title: newTaskTitle,
-                description: newTaskDescription,
-            };
-            roadmap[selectedColumn].push(newTask);
-
-            const updatedRoadmapsFromStorage = {
-                ...roadmapsFromStorage,
-                [roadmapKey]: roadmap,
-            };
-            layoutManager.saveRoadmapsToLocalStorage(
-                updatedRoadmapsFromStorage
-            );
-
-            newTaskTitleInput.value = '';
-            newTaskDescriptionInput.value = '';
-            newTaskModal.classList.add('hidden');
-
-            renderKanbanBoard(roadmapKey);
-        });
-    }
+    kanbanBoardManager.enableDragAndDrop();
 }
+
+document.addEventListener('DOMContentLoaded', function () {
+    const modal = document.getElementById('newTaskModal');
+    const closeModalButton = document.getElementById('closeTaskModal');
+    const createTaskButton = document.getElementById('createTaskButton');
+    const taskColumnInput = document.getElementById('taskColumn');
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const roadmapKey = urlParams.get('roadmap') || 'logicProgramming';
+
+    document.querySelectorAll('.create-task').forEach((button) => {
+        button.addEventListener('click', (event) => {
+            const column = event.target.getAttribute('data-column');
+            taskColumnInput.value = column;
+            modal.classList.remove('hidden');
+        });
+    });
+
+    closeModalButton.addEventListener('click', () => {
+        modal.classList.add('hidden');
+    });
+
+    window.addEventListener('click', (event) => {
+        if (event.target === modal) {
+            modal.classList.add('hidden');
+        }
+    });
+
+    createTaskButton.addEventListener('click', () => {
+        const newTaskTitle = document
+            .getElementById('newTaskTitle')
+            .value.trim();
+        const newTaskDescription = document
+            .getElementById('newTaskDescription')
+            .value.trim();
+        const column = taskColumnInput.value;
+
+        if (!newTaskTitle || !column) {
+            alert('O título e a coluna são obrigatórios.');
+            return;
+        }
+
+        const newTask = {
+            title: newTaskTitle,
+            description: newTaskDescription,
+        };
+
+        const roadmapsFromStorage =
+            layoutManager.loadRoadmapsFromLocalStorage();
+        const allRoadmaps = { ...defaultRoadmaps, ...roadmapsFromStorage };
+        const roadmap = allRoadmaps[roadmapKey];
+
+        roadmap[column].push(newTask);
+
+        const updatedRoadmapsFromStorage = {
+            ...roadmapsFromStorage,
+            [roadmapKey]: roadmap,
+        };
+        layoutManager.saveRoadmapsToLocalStorage(updatedRoadmapsFromStorage);
+
+        renderKanbanBoard(roadmapKey);
+
+        document.getElementById('newTaskTitle').value = '';
+        document.getElementById('newTaskDescription').value = '';
+        modal.classList.add('hidden');
+    });
+});

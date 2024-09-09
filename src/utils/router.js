@@ -1,5 +1,4 @@
 import { layoutManager } from './layout';
-import { kanbanBoardManager } from './kanbanManager';
 import { defaultRoadmaps } from './data/roadmapsData';
 import { renderKanbanBoard } from './kanbanRenderer';
 

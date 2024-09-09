@@ -1,5 +1,6 @@
 import { router } from './router';
 import { defaultRoadmaps } from './data/roadmapsData';
+import { renderKanbanBoard } from './kanbanRenderer';
 
 class LayoutManager {
     constructor() {
