@@ -1,4 +1,5 @@
 import { router } from './router';
+import './kanbanSearch';
 
 class LayoutManager {
     constructor() {

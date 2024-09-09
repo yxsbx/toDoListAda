@@ -1,7 +1,8 @@
 import { roadmaps } from './data/roadmapsData';
 
-export function renderKanbanBoard(roadmapKey) {
-    const roadmap = roadmaps[roadmapKey];
+export function renderKanbanBoard(roadmapKey, test) {
+    const roadmap =
+        test === undefined ? roadmaps[roadmapKey] : test[roadmapKey];
 
     if (!roadmap) {
         console.error(`Nenhum roadmap encontrado com a chave: ${roadmapKey}`);
