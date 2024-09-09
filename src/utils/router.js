@@ -1,5 +1,6 @@
-import { layoutManager } from './layout.js';
-import { kanbanBoardManager } from './kanbanManager.js';
+import { layoutManager } from './layout';
+import { defaultRoadmaps } from './data/roadmapsData';
+import { renderKanbanBoard } from './kanbanRenderer';
 
 class Router {
     constructor(routes) {
@@ -51,30 +52,83 @@ class Router {
 class RoadmapSelection {
     constructor(router) {
         this.router = router;
+        this.searchInput = document.querySelector('.input-search-toadmaps');
+        this.searchResults = document.querySelector('.search-results');
+        this.initializeSearchListener();
     }
 
     initialize() {
-        const roadmapButtons = [
-            { id: 'logicProgrammingBtn', key: 'logicProgramming' },
-            {
-                id: 'objectOrientedProgrammingBtn',
-                key: 'objectOrientedProgramming',
-            },
-            { id: 'webDevelopmentBtn', key: 'webDevelopment' },
-            { id: 'dataStructuresBtn', key: 'dataStructures' },
-            { id: 'algorithmsBtn', key: 'algorithms' },
-            { id: 'pythonBtn', key: 'python' },
-        ];
+        const roadmapsFromStorage =
+            layoutManager.loadRoadmapsFromLocalStorage();
+        const allRoadmaps = { ...defaultRoadmaps, ...roadmapsFromStorage };
 
-        roadmapButtons.forEach((btn) => {
-            const buttonElement = document.getElementById(btn.id);
-            if (buttonElement) {
-                buttonElement.addEventListener('click', () => {
-                    const newUrl = `/roadmap-details?roadmap=${btn.key}`;
-                    this.router.navigateTo(newUrl);
-                });
-            }
+        const roadmapContainer = document.querySelector(
+            '.roadmap-buttons-container'
+        );
+        if (!roadmapContainer) {
+            console.error('Container de botões de roadmap não encontrado.');
+            return;
+        }
+
+        roadmapContainer.innerHTML = '';
+
+        Object.keys(allRoadmaps).forEach((roadmapKey) => {
+            layoutManager.addRoadmapButton(
+                this.formatDisplayName(roadmapKey),
+                roadmapKey
+            );
         });
+    }
+
+    formatDisplayName(roadmapKey) {
+        return roadmapKey
+            .replace(/([A-Z])/g, ' $1')
+            .replace(/^./, (str) => str.toUpperCase());
+    }
+
+    initializeSearchListener() {
+        if (!this.searchInput || !this.searchResults) return;
+
+        this.searchInput.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+
+            if (searchTerm.length === 0) {
+                this.searchResults.classList.add('hidden');
+                return;
+            }
+
+            const roadmapsFromStorage =
+                layoutManager.loadRoadmapsFromLocalStorage();
+            const allRoadmaps = { ...defaultRoadmaps, ...roadmapsFromStorage };
+
+            const filteredRoadmaps = Object.keys(allRoadmaps).filter(
+                (roadmapKey) => roadmapKey.toLowerCase().includes(searchTerm)
+            );
+
+            this.displaySearchResults(filteredRoadmaps);
+        });
+    }
+
+    displaySearchResults(roadmaps) {
+        this.searchResults.innerHTML = '';
+        if (roadmaps.length === 0) {
+            this.searchResults.classList.add('hidden');
+            return;
+        }
+
+        roadmaps.forEach((roadmapKey) => {
+            const li = document.createElement('li');
+            li.className = 'cursor-pointer px-4 py-2 hover:bg-gray-200';
+            li.textContent = this.formatDisplayName(roadmapKey);
+            li.addEventListener('click', () => {
+                const newUrl = `/roadmap-details?roadmap=${roadmapKey}`;
+                this.router.navigateTo(newUrl);
+                this.searchResults.classList.add('hidden');
+            });
+            this.searchResults.appendChild(li);
+        });
+
+        this.searchResults.classList.remove('hidden');
     }
 }
 
@@ -90,10 +144,17 @@ export const router = new Router([
     {
         path: '/roadmap-details',
         view: () =>
-            router.loadComponent(
-                'roadmap-details',
-                kanbanBoardManager.initializeKanbanBoard
-            ),
+            router.loadComponent('roadmap-details', () => {
+                const urlParams = new URLSearchParams(window.location.search);
+                let roadmapKey = urlParams.get('roadmap');
+                if (!roadmapKey) {
+                    roadmapKey = 'logicProgramming';
+                    const newUrl = `${window.location.origin}/roadmap-details?roadmap=${roadmapKey}`;
+                    window.history.replaceState({ path: newUrl }, '', newUrl);
+                }
+
+                renderKanbanBoard(roadmapKey);
+            }),
     },
     {
         path: '/about-roadmap',

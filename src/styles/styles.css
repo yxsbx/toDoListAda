@@ -25,10 +25,6 @@
     @apply border border-blue-600 text-blue-600 hover:bg-blue-100;
   }
 
-  .kanban-column {
-    @apply bg-white shadow p-4 rounded-md;
-  }
-
   .kanban-title {
     @apply font-bold text-lg mb-4 text-center;
   }

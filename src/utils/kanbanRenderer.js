@@ -1,17 +1,18 @@
-import { roadmaps } from './data/roadmapsData';
+import { layoutManager } from './layout';
+import { defaultRoadmaps } from './data/roadmapsData';
+import { kanbanBoardManager } from './kanbanManager';
 
-export function renderKanbanBoard(roadmapKey, test) {
-    const roadmap =
-        test === undefined ? roadmaps[roadmapKey] : test[roadmapKey];
+export function renderKanbanBoard(roadmapKey) {
+    const roadmapsFromStorage = layoutManager.loadRoadmapsFromLocalStorage();
+    const allRoadmaps = { ...defaultRoadmaps, ...roadmapsFromStorage };
+
+    const roadmap = allRoadmaps[roadmapKey];
 
     if (!roadmap) {
         console.error(`Nenhum roadmap encontrado com a chave: ${roadmapKey}`);
         return;
     }
 
-    // LEIAM OS COMENTÁRIOS, POR FAVOR!
-
-    
     Object.keys(roadmap).forEach((column) => {
         const columnElement = document.getElementById(column);
 
@@ -23,38 +24,39 @@ export function renderKanbanBoard(roadmapKey, test) {
             roadmap[column].forEach((task, index) => {
                 const taskElement = document.createElement('div');
                 taskElement.className =
-                    'kanban-card bg-slate-100 rounded-md p-4 mb-4';
+                    'kanban-card bg-white rounded-md p-4 mb-4 border-solid border border-700';
                 taskElement.draggable = true;
+                taskElement.dataset.taskId = task.title;
                 taskElement.dataset.index = index;
                 taskElement.dataset.column = column;
 
                 taskElement.innerHTML = `
                     <h3 class="font-bold mb-2">${task.title}</h3>
                     <p class="text-black text-sm mb-4">${task.description}</p>
-                    <div class="flex justify-between items-center text-black text-sm mb-2">
-                        <span class="${task.labelColor} text-black font-bold rounded-lg p-2">${task.label}</span>
-                        <span>${task.deadline}</span>
-                    </div>
                     <div class="flex justify-between">
                         <button class="edit-task text-blue-500 underline">Editar</button>
                         <button class="delete-task text-red-500 underline">Excluir</button>
                     </div>
                 `;
 
-                // Deletar a tarefa que queremos:
                 taskElement
                     .querySelector('.delete-task')
                     .addEventListener('click', () => {
-                        roadmap[column].splice(index, 1); // Vai ser usado para remover nossa tarefa
-                        renderKanbanBoard(roadmapKey); // Redesenha o quadro, neste caso, como deletamos a tarefa, ai sim faz sentido redesenhar o quadro.
+                        roadmap[column].splice(index, 1);
+
+                        const updatedRoadmapsFromStorage = {
+                            ...roadmapsFromStorage,
+                            [roadmapKey]: roadmap,
+                        };
+                        layoutManager.saveRoadmapsToLocalStorage(
+                            updatedRoadmapsFromStorage
+                        );
+                        renderKanbanBoard(roadmapKey);
                     });
 
-                // Editar a nossa tarefa escolhida:
                 taskElement
                     .querySelector('.edit-task')
                     .addEventListener('click', () => {
-                        
-                        // Prompt com os dados que vamos alterar no nosso card:
                         const newTitle = prompt(
                             'Editar título da tarefa:',
                             task.title
@@ -63,46 +65,92 @@ export function renderKanbanBoard(roadmapKey, test) {
                             'Editar descrição da tarefa:',
                             task.description
                         );
-                        const newLabel = prompt(
-                            'Editar label da tarefa:',
-                            task.label
+
+                        if (newTitle && newTitle.trim()) task.title = newTitle;
+                        if (newDescription && newDescription.trim())
+                            task.description = newDescription;
+
+                        const updatedRoadmapsFromStorage = {
+                            ...roadmapsFromStorage,
+                            [roadmapKey]: roadmap,
+                        };
+                        layoutManager.saveRoadmapsToLocalStorage(
+                            updatedRoadmapsFromStorage
                         );
-                        const newLabelColor = prompt(
-                            'Editar cor do label da tarefa (ex: bg-blue-200):',
-                            task.labelColor
-                        );
-                        const newDeadline = prompt(
-                            'Editar prazo da tarefa:',
-                            task.deadline
-                        );
-
-                        // é pra atualizar só os campos que tiver alguma alterações.
-
-                        // o problema, pelo que notei, é que quando a gente editava qualquer coisa no card, ao ínves dele editar apenas a informação no card, ele redesenhava todo o quadro, porque acabava chamando a função renderKanbanBoard(roadmapKey);
-
-                        // Por isso dava os erros de crashar no chrome, porque ficava criando um efeito em cascata , criando um monte de "redesenhos" do quadro ao mesmo tempo.
-
-                        // agora o código vai ver se teve mudança pelos (if) e so vai atualizar o dado que teve mudança no card. Teoricamente, tem que funcionar, já que nao vai ficar atualizando todo o board, com isso o loop deve acabar (no meu não crashou mais no Chrome... safari esava OK).
-
-                        //Basicamente, o que tava ocorrendo é, ao invés dele "apagar a informação antiga e substituir pela nova no card X", ele tava apagando todo o quadro, e refazendo ele de novo sem necessidade, mesmo não tendo sido editado nada nos quadros W,Y,Z..
-                        if (newTitle) task.title = newTitle;
-                        if (newDescription) task.description = newDescription;
-                        if (newLabel) task.label = newLabel;
-                        if (newLabelColor) task.labelColor = newLabelColor;
-                        if (newDeadline) task.deadline = newDeadline;
-
-                        taskElement.querySelector('h3').textContent =
-                            task.title;
-                        taskElement.querySelector('p').textContent =
-                            task.description;
-                        taskElement.querySelector('span').className =
-                            `${task.labelColor} text-black font-bold rounded-lg p-2`;
-                        taskElement.querySelector('span').textContent =
-                            task.label;
+                        renderKanbanBoard(roadmapKey);
                     });
 
                 taskList.appendChild(taskElement);
             });
         }
     });
+
+    kanbanBoardManager.enableDragAndDrop();
 }
+
+document.addEventListener('DOMContentLoaded', function () {
+    const modal = document.getElementById('newTaskModal');
+    const closeModalButton = document.getElementById('closeTaskModal');
+    const createTaskButton = document.getElementById('createTaskButton');
+    const taskColumnInput = document.getElementById('taskColumn');
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const roadmapKey = urlParams.get('roadmap') || 'logicProgramming';
+
+    document.querySelectorAll('.create-task').forEach((button) => {
+        button.addEventListener('click', (event) => {
+            const column = event.target.getAttribute('data-column');
+            taskColumnInput.value = column;
+            modal.classList.remove('hidden');
+        });
+    });
+
+    closeModalButton.addEventListener('click', () => {
+        modal.classList.add('hidden');
+    });
+
+    window.addEventListener('click', (event) => {
+        if (event.target === modal) {
+            modal.classList.add('hidden');
+        }
+    });
+
+    createTaskButton.addEventListener('click', () => {
+        const newTaskTitle = document
+            .getElementById('newTaskTitle')
+            .value.trim();
+        const newTaskDescription = document
+            .getElementById('newTaskDescription')
+            .value.trim();
+        const column = taskColumnInput.value;
+
+        if (!newTaskTitle || !column) {
+            alert('O título e a coluna são obrigatórios.');
+            return;
+        }
+
+        const newTask = {
+            title: newTaskTitle,
+            description: newTaskDescription,
+        };
+
+        const roadmapsFromStorage =
+            layoutManager.loadRoadmapsFromLocalStorage();
+        const allRoadmaps = { ...defaultRoadmaps, ...roadmapsFromStorage };
+        const roadmap = allRoadmaps[roadmapKey];
+
+        roadmap[column].push(newTask);
+
+        const updatedRoadmapsFromStorage = {
+            ...roadmapsFromStorage,
+            [roadmapKey]: roadmap,
+        };
+        layoutManager.saveRoadmapsToLocalStorage(updatedRoadmapsFromStorage);
+
+        renderKanbanBoard(roadmapKey);
+
+        document.getElementById('newTaskTitle').value = '';
+        document.getElementById('newTaskDescription').value = '';
+        modal.classList.add('hidden');
+    });
+});

@@ -1,20 +1,9 @@
 import Sortable from 'sortablejs';
 import { renderKanbanBoard } from './kanbanRenderer';
+import { layoutManager } from './layout';
 
 class KanbanBoardManager {
     constructor() {
-        this.kanbanButtons = [
-            { id: 'logicProgrammingBtn', key: 'logicProgramming' },
-            {
-                id: 'objectOrientedProgrammingBtn',
-                key: 'objectOrientedProgramming',
-            },
-            { id: 'webDevelopmentBtn', key: 'webDevelopment' },
-            { id: 'dataStructuresBtn', key: 'dataStructures' },
-            { id: 'algorithmsBtn', key: 'algorithms' },
-            { id: 'pythonBtn', key: 'python' },
-        ];
-
         this.columns = ['blocked', 'TODO', 'progress', 'completed'];
         this.currentRoadmap = null;
 
@@ -24,20 +13,13 @@ class KanbanBoardManager {
     }
 
     checkKanbanElementsExist = () => {
-        const checkExistInterval = setInterval(() => {
-            const columnsExist = this.columns.every((columnId) =>
-                document.getElementById(columnId)
-            );
+        const columnsExist = this.columns.every((columnId) =>
+            document.getElementById(columnId)
+        );
 
-            if (columnsExist) {
-                clearInterval(checkExistInterval);
-                this.initializeKanbanBoard();
-            } else {
-                console.warn(
-                    'As colunas do Kanban ainda não estão disponíveis no DOM.'
-                );
-            }
-        }, 100);
+        if (columnsExist) {
+            this.initializeKanbanBoard();
+        }
     };
 
     updateKanbanBoard = (roadmap) => {
@@ -54,11 +36,13 @@ class KanbanBoardManager {
     initializeKanbanBoard = () => {
         this.updateKanbanBoard();
 
-        this.kanbanButtons.forEach((btn) => {
-            const buttonElement = document.getElementById(btn.id);
+        const roadmaps = layoutManager.loadRoadmapsFromLocalStorage();
+
+        Object.keys(roadmaps).forEach((roadmapKey) => {
+            const buttonElement = document.getElementById(`${roadmapKey}Btn`);
             if (buttonElement) {
                 buttonElement.addEventListener('click', () => {
-                    this.handleRoadmapChange(btn.key);
+                    this.handleRoadmapChange(roadmapKey);
                 });
             }
         });
@@ -84,15 +68,22 @@ class KanbanBoardManager {
                 }
 
                 Sortable.create(columnEl, {
-                    group: 'shared',
+                    group: {
+                        name: 'shared',
+                        pull: true,
+                        put: true,
+                    },
                     animation: 200,
                     delay: 0,
                     ghostClass: 'sortable-ghost',
-                    sort: false,
-                    fallbackTolerance: 0,
+                    sort: true,
                     onEnd: (evt) => {
                         this.adjustColumnHeight(evt.from);
                         this.adjustColumnHeight(evt.to);
+
+                        console.log(
+                            `Moved item from ${evt.from.id} to ${evt.to.id}`
+                        );
                     },
                 });
             }
