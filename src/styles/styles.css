@@ -1,0 +1,107 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+
+  html {
+    font-family: 'Inter', sans-serif;
+  }
+
+  .disabled-node {
+    pointer-events: none;
+  }
+
+  .btn {
+    @apply inline-flex w-full items-center bg-white justify-center rounded-md transition-colors mb-4 px-6 py-2 cursor-pointer;
+  }
+
+  .btn-filled {
+    @apply bg-blue-600 text-white hover:bg-blue-700;
+  }
+
+  .btn-outlined {
+    @apply border border-blue-600 text-blue-600 hover:bg-blue-100;
+  }
+
+  .kanban-title {
+    @apply font-bold text-lg mb-4 text-center;
+  }
+
+  .task-item {
+    @apply bg-gray-200 p-2 rounded-md mb-2;
+  }
+}
+
+@layer utilities {
+  #sidebar-container {
+    transition: width 0.3s ease;
+    background-color: #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow-x: hidden;
+    width: 5rem;
+  }
+
+  #sidebar-container:hover {
+    width: 16rem;
+  }
+
+  #sidebar-container .sidebar-item-label {
+    display: none;
+  }
+
+  #sidebar-container:hover .sidebar-item-label {
+    display: inline;
+  }
+
+  #main-container {
+    transition: margin-left 0.3s ease;
+  }
+
+  @media (max-width: 768px) {
+    #sidebar-container {
+      display: none;
+    }
+
+    #main-container {
+      margin-left: 0;
+    }
+  }
+
+  #mobile-navbar-container {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color: #ffffff;
+    padding: 0.5rem;
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  #mobile-navbar-container button {
+    flex-direction: column;
+    align-items: center;
+    color: #6b7280;
+    transition: color 0.2s ease-in-out;
+  }
+
+  #mobile-navbar-container button:hover {
+    color: #3b82f6;
+  }
+
+  #mobile-navbar-container svg {
+    width: 24px;
+    height: 24px;
+    margin-bottom: 0.25rem;
+  }
+
+  #mobile-navbar-container span {
+    font-size: 0.75rem;
+  }
+
+  @media (min-width: 768px) {
+    #mobile-navbar-container {
+      display: none;
+    }
+  }
+}
