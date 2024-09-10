@@ -8,7 +8,6 @@ Este é um projeto de aplicação de lista de tarefas (To-Do List) construído u
 -   **Organização em Quadros:** Organize suas tarefas em quadros de Kanban.
 -   **Navegação Dinâmica:** Navegue entre diferentes páginas e visualizações sem recarregar a página.
 -   **Interface Responsiva:** Layout adaptável a diferentes tamanhos de tela.
--   **Deploy Fácil:** Pronto para ser hospedado em GitHub Pages.
 
 ## Tecnologias Utilizadas
 
@@ -41,6 +40,8 @@ Siga os passos abaixo para configurar o ambiente de desenvolvimento:
 
 ## Scripts Disponíveis
 
+**Necessário criar pasta components em public para o build.**
+
 No diretório do projeto, você pode executar os seguintes comandos:
 
 ### `npm run build`
@@ -49,42 +50,11 @@ Compila e empacota os arquivos da aplicação para produção. Gera um build oti
 
 ### `npm start`
 
-Inicia o servidor de desenvolvimento com Webpack Dev Server, incluindo Hot Module Replacement e Live Reloading.
-
-### `npm run format`
-
-Formata o código utilizando Prettier.
-
-### `npm run lint`
-
-Verifica o código em busca de problemas de estilo e sintaxe utilizando ESLint.
-
-### `npm run deploy`
-
-Compila a aplicação e faz o deploy para GitHub Pages (necessita configuração prévia do repositório para usar o GitHub Pages).
-
-## Estrutura do Projeto
-
-Aqui está uma visão geral da estrutura do projeto:
-
-├── public/ # Arquivos estáticos para deploy
-├── src/ # Código-fonte da aplicação
-│ ├── components/ # Componentes HTML
-│ ├── styles/ # Arquivos CSS
-│ └── utils/ # Arquivos JavaScript (lógica de negócios, roteamento, layout, etc.)
-├── .eslintrc.js # Configuração do ESLint
-├── .prettierrc # Configuração do Prettier
-├── tailwind.config.js # Configuração do TailwindCSS
-├── webpack.config.js # Configuração do Webpack
-└── package.json # Dependências e scripts
+Inicia o servidor de desenvolvimento com Webpack, incluindo Hot Module Replacement e Live Reloading.
 
 ## Contribuindo
 
 Contribuições são bem-vindas! Sinta-se à vontade para abrir issues e pull requests.
-
-## Licença
-
-Este projeto está licenciado sob a Licença MIT - veja o arquivo [LICENSE](LICENSE) para mais detalhes.
 
 ## Autor
 
