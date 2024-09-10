@@ -21,6 +21,44 @@ export function renderKanbanBoard(roadmapKey) {
 
             taskList.innerHTML = '';
 
+            const newTaskButton = columnElement.querySelector('.btn-new-task');
+
+            if (newTaskButton && !newTaskButton.dataset.listenerAttached) {
+                newTaskButton.addEventListener('click', function () {
+                    const newTaskTitle = prompt(
+                        'Digite o título da nova tarefa:'
+                    );
+                    const newTaskDescription = prompt(
+                        'Digite a descrição da nova tarefa:'
+                    );
+
+                    if (newTaskTitle && newTaskTitle.trim()) {
+                        const newTask = {
+                            title: newTaskTitle.trim(),
+                            description: newTaskDescription
+                                ? newTaskDescription.trim()
+                                : '',
+                        };
+
+                        roadmap[column].push(newTask);
+
+                        const updatedRoadmapsFromStorage = {
+                            ...roadmapsFromStorage,
+                            [roadmapKey]: roadmap,
+                        };
+
+                        layoutManager.saveRoadmapsToLocalStorage(
+                            updatedRoadmapsFromStorage
+                        );
+                        renderKanbanBoard(roadmapKey);
+                    } else {
+                        alert('O título da tarefa é obrigatório.');
+                    }
+                });
+
+                newTaskButton.dataset.listenerAttached = 'true';
+            }
+
             roadmap[column].forEach((task, index) => {
                 const taskElement = document.createElement('div');
                 taskElement.className =
@@ -87,70 +125,3 @@ export function renderKanbanBoard(roadmapKey) {
 
     kanbanBoardManager.enableDragAndDrop();
 }
-
-document.addEventListener('DOMContentLoaded', function () {
-    const modal = document.getElementById('newTaskModal');
-    const closeModalButton = document.getElementById('closeTaskModal');
-    const createTaskButton = document.getElementById('createTaskButton');
-    const taskColumnInput = document.getElementById('taskColumn');
-
-    const urlParams = new URLSearchParams(window.location.search);
-    const roadmapKey = urlParams.get('roadmap') || 'logicProgramming';
-
-    document.querySelectorAll('.create-task').forEach((button) => {
-        button.addEventListener('click', (event) => {
-            const column = event.target.getAttribute('data-column');
-            taskColumnInput.value = column;
-            modal.classList.remove('hidden');
-        });
-    });
-
-    closeModalButton.addEventListener('click', () => {
-        modal.classList.add('hidden');
-    });
-
-    window.addEventListener('click', (event) => {
-        if (event.target === modal) {
-            modal.classList.add('hidden');
-        }
-    });
-
-    createTaskButton.addEventListener('click', () => {
-        const newTaskTitle = document
-            .getElementById('newTaskTitle')
-            .value.trim();
-        const newTaskDescription = document
-            .getElementById('newTaskDescription')
-            .value.trim();
-        const column = taskColumnInput.value;
-
-        if (!newTaskTitle || !column) {
-            alert('O título e a coluna são obrigatórios.');
-            return;
-        }
-
-        const newTask = {
-            title: newTaskTitle,
-            description: newTaskDescription,
-        };
-
-        const roadmapsFromStorage =
-            layoutManager.loadRoadmapsFromLocalStorage();
-        const allRoadmaps = { ...defaultRoadmaps, ...roadmapsFromStorage };
-        const roadmap = allRoadmaps[roadmapKey];
-
-        roadmap[column].push(newTask);
-
-        const updatedRoadmapsFromStorage = {
-            ...roadmapsFromStorage,
-            [roadmapKey]: roadmap,
-        };
-        layoutManager.saveRoadmapsToLocalStorage(updatedRoadmapsFromStorage);
-
-        renderKanbanBoard(roadmapKey);
-
-        document.getElementById('newTaskTitle').value = '';
-        document.getElementById('newTaskDescription').value = '';
-        modal.classList.add('hidden');
-    });
-});
