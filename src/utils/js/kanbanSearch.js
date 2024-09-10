@@ -1,4 +1,4 @@
-import { roadmaps } from './data/roadmapsData';
+import { roadmaps } from '../data/roadmapsData';
 import { kanbanBoardManager } from './kanbanManager';
 import { renderKanbanBoard } from './kanbanRenderer';
 

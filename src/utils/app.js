@@ -1,6 +1,6 @@
 import '../styles/styles.css';
-import { layoutManager } from './layout.js';
-import { router } from './router.js';
+import { layoutManager } from './js/layout.js';
+import { router } from './js/router.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     layoutManager.loadComponents();
